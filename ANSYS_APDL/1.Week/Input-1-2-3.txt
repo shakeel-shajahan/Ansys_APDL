@@ -1,0 +1,57 @@
+/com...Shakeel Shajahan
+
+FINISH
+/CLEAR
+
+
+com , ------- Preprocessing
+/PREP7
+
+/com , ------- Material
+MP,ex ,1 ,210000
+MP,nuxy ,1,0.3
+
+/com , ------- Elementtyp
+ET ,1,PLANE182,3
+
+/com , ------- Geometry
+K,1,0,0
+K,2 ,1000 ,80
+K,3 ,1000 ,120
+K,4,0,200
+A,1,2,3,4
+
+/com , ------- Mesh
+LESIZE ,1,,,8
+LESIZE ,2,,,4
+LESIZE ,3,,,8
+LESIZE ,4,,,4
+AMESH ,1
+
+/com , ---- Solution
+/SOLU
+
+/com , ---- Boundary Conditions
+nn=node (0,200 ,0)
+D,nn ,ux ,0
+nn=node (0,150 ,0)
+D,nn ,ux ,0
+nn=node (0,100 ,0)
+D,nn ,all ,0
+nn=node (0,50 ,0)
+D,nn ,ux ,0
+nn=node(0,0,0)
+D,nn ,ux ,0
+
+/com , ---- Load
+nn=node (1000 ,120 ,0)
+f,nn ,fy , -490.5
+SOLVE
+
+/com , ---- Postprocessing
+/POST1
+PLNSOL ,u,y,2
+NSEL ,R,loc ,y,100
+allsel
+PRNSOL ,u,y,2
+

@@ -1,0 +1,281 @@
+/com, --------------- Advanced Structural Analysis using ANSYS
+/com, --------------- Project 7
+/com, --------------- Simulation of a Sheet Forming Process
+/com, --------------- Eryilmaz, B. Sc. Bahadir; Shajahan, B. Tech. Shakeel Mohammed; Lewitzky, B. Eng. Oskar Philip
+/com, --------------- AdvaANSYS-Project7.dat
+
+/com, --------------- PREPROCESSING
+finish
+/clear
+/PREP7
+
+/com, --------------- MATERIALS
+/com, --------------- LINEAR ELASTIC STAMP (CONTACT)
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,EX,1,,210000e6 
+MPDATA,PRXY,1,,0.3 
+/com --------------- BILINEAR ISOTROPIC HARDENING SHEET (TARGET)
+MPTEMP,,,,,,,,  
+MPTEMP,1,0  
+MPDATA,EX,2,,3000e6
+MPDATA,PRXY,2,,0.2  
+TB,BISO,2,1,2,  
+TBTEMP,0
+TBDATA,,60e6,500e6,,,, 
+
+/com, --------------- ELEMENT TYPE
+ET,1,plane182
+ET,2,solid185,,3
+
+/com, --------------- SHEET GEOMETRY PLANE(S)
+K,1,0.000,0.000,0.000
+K,2,0.055,0.000,0.000
+K,3,0.250,0.000,0.000
+K,4,0.000,0.00,-0.250
+K,5,0.000,0.00,-0.055 
+L,1,2
+L,2,3
+LARC,3,4,1,0.250
+L,4,5
+L,5,1
+LARC,2,5,1,0.055
+AL,2,3,4,6
+AL,1,5,6
+AGLUE,ALL
+
+/com, --------------- MESH PLANE 1/4-MODEL OF THE SHEET
+!for mesh 3 change 8 to 24
+LESIZE,1,,,8
+LESIZE,2,,,8
+LESIZE,3,,,8
+LESIZE,4,,,8
+LESIZE,5,,,8
+LESIZE,6,,,8
+
+/com, --------------- EXTRUDE VOLUME
+TYPE,2
+MAT,2
+ESIZE,,1
+VEXT,1,2,,,0.005
+VGLUE,1,2
+
+/com, --------------- MESH VOLUME
+TYPE,2
+MAT,2
+VMESH,2
+VMESH,1
+
+/com, --------------- STAMP GEOMETRY PLANE(S)
+K,11,0.000,0.060
+K,12,0.050,0.060
+K,13,0.000,0.010
+K,14,0.000,0.160
+K,15,0.05,0.160
+LARC,12,13,11,0.050
+L,13,11
+L,11,14
+L,14,15
+L,15,12
+AL,18,19,20,21,22
+
+/com, --------------- MESH THE 1/4-MODEL OF THE STAMP
+LESIZE,18,,,20
+LESIZE,19,,,20
+LESIZE,20,,,20
+LESIZE,21,,,20
+LESIZE,22,,,20
+TYPE,1
+MAT,1
+AMESH,11
+
+/com, --------------- EXTRUDE VOLUME
+TYPE,2
+MAT,1
+VROTAT,11,,,,,,11,14,90,8
+
+/com, --------------- DELETE MESH FOR AREA 11
+ACLEAR,11
+
+/com, --------------- BOUNDARY CONDITIONS
+/com, --------------- CLAMPING (AREAS 1,3,4,5,6)
+ASEL,S,AREA,,1
+NSLA,S,1
+D,ALL,uy,0
+D,ALL,ux,0
+D,ALL,uz,0
+ALLSEL
+ASEL,S,AREA,,3,6
+NSLA,S,1
+D,ALL,uy,0
+D,ALL,ux,0
+D,ALL,uz,0
+ALLSEL
+/com, --------------- PREVENT THE STAMP'S MOVEMENT IN X-Z-DIRECTION
+ASEL,S,AREA,,11,43,4
+NSLA,S,1
+D,ALL,ux,0
+D,ALL,uz,0
+ALLSEL
+/com, --------------- PREVENT SHEET'S MOVEMENT IN THE CONTACT AREA IN X-Z-PLANE
+VSEL,S, , ,       2 
+NSLV,S,1 
+NPLOT
+CM,VERT-DISP,NODE  
+FLST,2,1,9,ORDE,1   
+FITEM,2,1   
+D,P51X, ,0, , , ,UX, , , , ,
+FLST,2,1,9,ORDE,1   
+FITEM,2,1   
+D,P51X, ,0, , , ,UZ, , , , ,
+
+/com, --------------- CONTACT COMPONENTS
+ASEL,S,AREA,,12,40,4
+NSLA,S,1
+CM,stamp_contact,NODE   
+ALLSEL
+
+ASEL,S,,,8
+NSLA,S,1  
+CM,sheet_metal_target,NODE 
+ALLSEL
+
+/com, --------------- MOVELINE COMPONENT
+NSEL,S,loc,y,0.160
+CM,moveline,NODE
+ALLSEL 
+
+/com, --------------- CONTACT
+/COM, CONTACT PAIR CREATION - START 
+CM,_NODECM,NODE 
+CM,_ELEMCM,ELEM 
+CM,_KPCM,KP 
+CM,_LINECM,LINE 
+CM,_AREACM,AREA 
+CM,_VOLUCM,VOLU 
+/GSAV,cwz,gsav,,temp
+MP,MU,1,
+MAT,1   
+R,3 
+REAL,3  
+ET,4,170
+ET,5,174
+KEYOPT,5,9,0
+KEYOPT,5,10,0   
+R,3,
+RMORE,  
+RMORE,,0
+RMORE,0 
+! Generate the target surface   
+NSEL,S,,,SHEET_METAL_TARGET 
+CM,_TARGET,NODE 
+TYPE,4  
+ESLN,S,0
+ESURF   
+CMSEL,S,_ELEMCM 
+! Generate the contact surface  
+NSEL,S,,,STAMP_CONTACT  
+CM,_CONTACT,NODE
+TYPE,5  
+ESLN,S,0
+ESURF   
+ALLSEL  
+ESEL,ALL
+ESEL,S,TYPE,,4  
+ESEL,A,TYPE,,5  
+ESEL,R,REAL,,3  
+/PSYMB,ESYS,1   
+/PNUM,TYPE,1
+/NUM,1  
+EPLOT   
+ESEL,ALL
+ESEL,S,TYPE,,4  
+ESEL,A,TYPE,,5  
+ESEL,R,REAL,,3  
+CMSEL,A,_NODECM 
+CMDEL,_NODECM   
+CMSEL,A,_ELEMCM 
+CMDEL,_ELEMCM   
+CMSEL,S,_KPCM   
+CMDEL,_KPCM 
+CMSEL,S,_LINECM 
+CMDEL,_LINECM   
+CMSEL,S,_AREACM 
+CMDEL,_AREACM   
+CMSEL,S,_VOLUCM 
+CMDEL,_VOLUCM   
+/GRES,cwz,gsav  
+CMDEL,_TARGET   
+CMDEL,_CONTACT  
+/COM, CONTACT PAIR CREATION - END   
+
+/com, --------------- SOLUTION
+/SOLU 
+ANTYPE,0 !static structural
+NCNV,2  
+NLGEOM, on  
+
+/com, --------------- LOADSTEP 1 (TOUCHING)
+TIME,1  
+CMSEL,s,moveline
+D,all,uy,-0.005 
+ALLSEL  
+NSUBST,10,20,5
+AUTOTS,ON   
+OUTRES,ALL,ALL  
+SOLVE
+
+/com, --------------- LOADSTEP 2
+TIME,2  
+NLGEOM ,on
+CMSEL,s,moveline
+D,all,uy,-0.035
+ALLSEL  
+NSUBST,10,20,5
+AUTOTS,ON   
+OUTRES,ALL,ALL  
+SOLVE 
+
+
+/com, --------------- LOADSTEP 3 (REMOVE THE LOAD)
+TIME,3 
+
+CMSEL,s,moveline
+Ddele,all
+allsel  
+NLGEOM ,on
+NSUBST,10,20,5
+AUTOTS,ON   
+OUTRES,ALL,ALL  
+SOLVE 
+
+/POST1
+PLNSOL, U,SUM, 0,1.0
+
+/POST26
+NUMVAR,200
+!displacement
+NSOL,2,268,U,Y
+!reaction forces
+CMSEL,S,VERT-DISP
+*GET,numnodes,NODE,0,count
+*DO,i,3,(numnodes+2),1
+ *GET,currn,NODE,0,num,min
+ RFORCE,i,currn,FY
+ NSEL,u,NODE,,currn
+*ENDDO
+
+!addition of reaction forces
+ALLSEL
+a=i+1
+ADD,a,3,4
+*DO,j,5,(numnodes+2)
+ ADD,a,a,j
+*ENDDO
+
+/AXLAB,x,uy
+/XRANGE,0,-0.035
+/AXLAB,y,FY
+/YRANGE,0,58000
+XVAR,2
+PLVAR,a

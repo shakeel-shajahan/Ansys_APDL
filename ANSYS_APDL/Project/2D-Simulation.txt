@@ -1,0 +1,228 @@
+/com, --------------- Advanced Structural Analysis using ANSYS
+/com, --------------- Project 7
+/com, --------------- Simulation of a Sheet Forming Process
+/com, --------------- Eryilmaz, Bahadir; Shajahan, Shakeel Mohammed; Lewitzky, Oskar Philip
+/com, --------------- AdvaANSYS-Project7.dat
+
+/com, --------------- PREPROCESSING
+finish
+/clear
+/PREP7
+
+/com, --------------- MATERIALS
+/com, --------------- Stamp - 1
+/com, --------------- Sheet - 2
+
+/com, --------------- Element Type
+ET,1,PLANE182
+ET,2,PLANE182
+
+/com, --------------- LINEAR ELASTIC STAMP (CONTACT)
+MP,ex,1,210000  
+MP,nuxy,1,0.3 
+
+/com --------------- BILINEAR ISOTROPIC HARDENING SHEET (TARGET)
+MP,ex,2,3000
+MP,nuxy,2,0.2  
+TB,BISO,2,1,2,  
+TBDATA,1,60,500
+
+MAT,1
+/com, --------------- GEOMETRY OF STAMP
+K,1,0.000,0.060
+K,2,0.050,0.060
+K,3,0.000,0.010
+K,4,0.000,0.160
+K,5,0.050,0.160
+LARC,2,3,1,0.050
+L,3,1
+L,1,4
+L,4,5
+L,5,2
+AL,1,2,3,4,5
+/com, --------------- PREPARING THE STAMP'S MESH
+LESIZE,1,,,20
+LESIZE,2,,,20
+LESIZE,3,,,20
+LESIZE,4,,,20
+LESIZE,5,,,20
+
+
+MAT,2
+/com, --------------- GEOMETRY OF SHEET
+K,6,0.000,0.000
+K,7,0.050,0.000
+K,8,0.250,0.000
+K,9,0.250,0.005
+K,10,0.050,0.005
+K,11,0.000,0.005
+L,6,7
+L,7,8
+L,8,9
+L,9,10
+L,10,11
+L,11,6
+L,7,10
+AL,11,6,12,10
+AL,12,7,8,9
+AGLUE,ALL
+/com, --------------- PREPARING THE SHEET'S MESH
+LESIZE,11,,,4
+LESIZE,12,,,4
+LESIZE,6,,,14
+LESIZE,10,,,14
+LESIZE,8,,,4
+LESIZE,7,,,10
+LESIZE,9,,,10
+
+/com, --------------- MESHING
+MAT,2
+AMESH,2
+AMESH,3
+MAT,1
+AMESH,1
+
+/com, -------- Contact Components
+LSEL,S,,,1
+NSLL,S,1
+CM,stamp_contact,NODE
+ALLSEL,ALL
+
+LSEL,S,,,10
+NSLL,S,1
+CM,sheet_metal_contact,NODE
+ALLSEL,ALL
+
+NSEL,S,loc,y,0.160
+CM,moveline,NODE
+ALLSEL  
+
+/COM, CONTACT PAIR CREATION - START 
+CM,_NODECM,NODE 
+CM,_ELEMCM,ELEM 
+CM,_KPCM,KP 
+CM,_LINECM,LINE 
+CM,_AREACM,AREA 
+CM,_VOLUCM,VOLU 
+/GSAV,cwz,gsav,,temp
+MP,MU,1,
+MAT,1   
+R,3 
+REAL,3  
+ET,3,169
+ET,4,172
+KEYOPT,4,9,0
+KEYOPT,4,10,0   
+R,3,
+RMORE,  
+RMORE,,0
+RMORE,0 
+! Generate the target surface   
+NSEL,S,,,SHEET_METAL_CONTACT
+CM,_TARGET,NODE 
+TYPE,3  
+ESLN,S,0
+ESURF   
+CMSEL,S,_ELEMCM 
+! Generate the contact surface  
+NSEL,S,,,STAMP_CONTACT  
+CM,_CONTACT,NODE
+TYPE,4  
+ESLN,S,0
+ESURF   
+ALLSEL  
+ESEL,ALL
+ESEL,S,TYPE,,3  
+ESEL,A,TYPE,,4  
+ESEL,R,REAL,,3  
+/PSYMB,ESYS,1   
+/PNUM,TYPE,1
+/NUM,1  
+EPLOT   
+ESEL,ALL
+ESEL,S,TYPE,,3  
+ESEL,A,TYPE,,4  
+ESEL,R,REAL,,3  
+CMSEL,A,_NODECM 
+CMDEL,_NODECM   
+CMSEL,A,_ELEMCM 
+CMDEL,_ELEMCM   
+CMSEL,S,_KPCM   
+CMDEL,_KPCM 
+CMSEL,S,_LINECM 
+CMDEL,_LINECM   
+CMSEL,S,_AREACM 
+CMDEL,_AREACM   
+CMSEL,S,_VOLUCM 
+CMDEL,_VOLUCM   
+/GRES,cwz,gsav  
+CMDEL,_TARGET   
+CMDEL,_CONTACT  
+/COM, CONTACT PAIR CREATION - END   
+
+
+/com, --------- Boundary conditions
+
+/com, Clamping
+ASEL,S,AREA,,3
+NSLA,S,1
+D,ALL,uy,0
+D,ALL,ux,0
+ALLSEL 
+
+/com, Lock the sides of the stamp (y free )
+ASEL,S,AREA,,1
+NSLA,S,1
+D,ALL,ux,0
+ALLSEL
+
+/com, --------------- prevent movement in X-Plane
+
+ASEL,S,,,2 
+NSLA,S  
+CM,LOCKSHEET,NODE  
+FLST,2,1,9,ORDE,1   
+FITEM,2,1   
+D,P51X,UX,0, , , , , , , , ,
+
+/SOLU
+ATYPE,0
+NCNV,2
+NLGEOM, on
+
+/com, first load step (touching)
+TIME,1  
+CMSEL,s,moveline
+D,all,uy,-0.005 
+ALLSEL  
+NSUBST,10,20,5
+AUTOTS,ON   
+OUTRES,ALL,ALL  
+SOLVE
+
+/com,-----LOADSTEP 2
+TIME,2  
+NLGEOM ,on
+CMSEL,s,moveline
+D,all,uy,-0.035
+ALLSEL  
+NSUBST,10,20,5
+AUTOTS,ON   
+OUTRES,ALL,ALL  
+SOLVE 
+
+
+/com,-----LOADSTEP 3
+TIME,3 
+
+CMSEL,s,moveline
+Ddele,all
+allsel  
+NLGEOM ,on
+NSUBST,10,20,5 
+AUTOTS,ON   
+OUTRES,ALL,ALL  
+SOLVE 
+
+/POST1
+PLNSOL, U,SUM, 0,1.0

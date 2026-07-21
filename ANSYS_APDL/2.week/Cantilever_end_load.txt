@@ -1,0 +1,91 @@
+/com, ------- Nonlinear Cantilever
+/com, ------- 2D_analysis_Beam_element
+
+FINISH
+/CLEAR
+
+/com, ------- Preprocessing
+/PREP7
+
+/com, ------- Material
+MP,ex,1,3000
+MP,nuxy,1,0.2
+
+/com, ------- Elementtyp 
+ET,1,BEAM188
+
+/com, ------- Crosssection data
+Sectype,1,Beam,CTUBE
+Secdata,40,80
+Sectype,2,Beam,CTUBE
+Secdata,40,80
+Sectype,3,Beam,CTUBE
+Secdata,40,80
+Sectype,4,Beam,CTUBE
+Secdata,40,80
+Sectype,5,Beam,CTUBE
+Secdata,40,80
+
+/com, ------- Nodes
+N,1,0,0
+N,2,200,0
+N,3,400,0
+N,4,600,0
+N,5,800,0
+N,6,1000,0
+
+/com, ------- Elements
+Secnum,1
+E,1,2
+Secnum,2
+E,2,3
+Secnum,3
+E,3,4
+Secnum,4
+E,4,5
+Secnum,5
+E,5,6
+
+
+
+/SOLU
+/com , Boundary conditions
+D ,1,all ,0
+/com , Load
+F ,6,fy , -6000
+F ,6,fx ,-Pi
+/com , Considering nonlinear
+/com , effects
+NLGEOM ,on
+/com , Load step identification
+/com , time
+TIME ,1
+/com , Automatic substep control
+AUTOTS ,on
+/com , Limits of substep control
+NSUBST ,10 ,100 ,5
+/com , Solving the load step
+SOLVE
+
+/com, ------- Postprocessing
+/POST1
+/PLOPTS,INFO,2 
+
+/SHOW,png,,0 
+
+!--schaltet auf weißen Hintergrund----
+/rgb,index,100,100,100,0
+/rgb,index,0,0,0,15
+
+PLNSOL,u,y,2
+
+
+
+/SHOW,CLOSE   ! close last graphic file and switch back to screen
+
+!--schaltet auf schwarzen Hintergrund----
+/rgb,index,100,100,100,15
+/rgb,index,0,0,0,0
+
+PLNSOL,u,y,2
+PRNSOL,u,y,2

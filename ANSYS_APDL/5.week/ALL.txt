@@ -1,0 +1,137 @@
+/com, ------- Contact without contact wizard
+/com, ------- 2D analysis to for Shifted box
+
+FINISH
+/CLEAR
+
+/com, ------- Preprocessing
+/PREP7
+
+n = 10
+
+/com, ------- Material
+MP,ex,1,72200
+MP,nuxy,1,0.33
+MP,dens,1,2.7e-9
+
+TB,FRIC,1,1,1,ISO
+TBDATA,1,0.2
+
+/com, ------- Elementtyps 
+ET,1,plane182,3,,3
+ET,2,CONTA175
+ET,3,TARGE169
+
+
+R,1,200		 				
+R,2,,,-1          
+/com, Geometry
+
+K,1,150,0
+K,2,150,150
+K,3,450,0
+K,4,450,150
+A,1,2,4,3
+
+/com, ----Mesh
+TYPE,1
+REAL,1
+MAT,1
+
+LESIZE,1,,,n
+LESIZE,2,,,2*n
+LESIZE,3,,,n
+LESIZE,4,,,2*n
+AMESH,1
+
+! line
+K,5,0,0      
+K,6,1000,0
+L,5,6
+TYPE,3 ! ( TARGE169)
+REAL,2
+MAT,1
+TSHAP,LINE
+LMESH,5
+
+! Contact
+TYPE,2
+REAL,2
+MAT,1
+LSEL,S,LINE,,4   
+NSLL,S,1         
+ESURF       
+ALLSEL
+
+
+!creating component
+LSEL,S,LINE,,3
+NSLL,S,1
+CM,edge,NODE
+ALLSEL
+
+!start solver
+/SOLU
+NLGEOM,ON
+OUTRES,ALL,ALL
+
+! apply boundary conditions to all nodes of ground base
+DL,5,,ALL,0
+DTRAN
+
+!applying gravitational force
+ACEL,,-9.81e3
+
+TIME,1
+NSUBST,10,10,10
+AUTOST,ON
+SOLVE
+
+!shifting the box
+TIME,2
+CMSEL,S,edge
+D,ALL,UX,600
+ALLSEL
+NSUBST,20,100,5
+
+AUTOST,ON
+ALLSEL
+
+SOLVE
+
+
+/POST26
+NUMVAR,20
+auxnode=NODE(300,150,0)
+
+!displacement
+NSOL,2,auxnode,U,X
+
+!reaction forces
+CMSEL,S,edge
+*GET,numnodes,NODE,0,COUNT
+*DO,i,3,(numnodes+2),1
+ *GET,y_max,NODE,0,MXLOC,Y
+ nn=NODE(300,y_max,0)
+ RFORCE,i,nn,FX
+ NSEL,U,NODE,,nn
+*ENDDO
+
+!addition of reaction forces
+ALLSEL
+a=i+1
+ADD,a,3,4
+*DO,j,5,(numnodes+2)
+ ADD,a,a,j
+*ENDDO
+
+!!PROD,2,2,,,,,,1
+!!PROD,a,a,,,,,,1
+/AXLAB,x,ux
+/AXLAB,y,FX
+XVAR,2
+PLVAR,a
+
+
+
+

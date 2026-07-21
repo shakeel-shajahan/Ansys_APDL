@@ -1,0 +1,65 @@
+/com, ------- Thermal analysis
+/com, -------
+
+FINISH
+/CLEAR
+
+/com, ------- Preprocessing
+/PREP7
+
+n=3 ! parameter for mesh
+
+/com, -------- Material
+
+MPTEMP,1,273
+MPDATA,DENS,1,,7900
+MPDATA,KXX,1,,47
+MPDATA,C,1,,490
+MPDATA,REFT,1,,273
+
+
+/com, -------- Elementtype
+ET,1,plane77,
+
+K,1,0,0
+K,2,0.0,0.5
+K,3,0.2,0.7
+K,4,0.8,0.7
+K,5,1,0.5
+K,6,1,0
+A,1,2,3,4,5,6
+
+/com, -------- mesh
+LCCAT,4,5
+LCCAT,1,2
+
+LESIZE,3,,,3*n
+LESIZE,6,,,3*n
+LESIZE,4,,,n
+LESIZE,5,,,2*n
+LESIZE,2,,,n
+LESIZE,1,,,2*n
+AMESH,1
+MSHKEY,1
+
+/com, ------- solution
+/SOLU
+
+ANTYPE,4
+
+
+TREF,273
+DL,5,,TEMP,373
+DL,1,,TEMP,273
+
+
+SFL,3,CONV,500,,293
+DTRAN
+SFTRAN
+
+
+TIME,100000
+AUTOTS,OFF
+DELTIM,1000,,,OFF
+OUTRES,ALL,ALL
+SOLVE

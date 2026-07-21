@@ -1,0 +1,68 @@
+/com, ------- Contact without contact wizard
+/com, ------- 2D analysis to for Shifted box
+
+FINISH
+/CLEAR
+
+/com, ------- Preprocessing
+/PREP7
+
+n = 10
+
+/com, ------- Material
+MP,ex,1,72200
+MP,nuxy,1,0.33
+MP,dens,1,2.7e-9
+
+TB,FRIC,1,1,1,ISO
+TBDATA,1,0.2
+
+/com, ------- Elementtyps 
+ET,1,plane182,3,,3
+ET,2,CONTA175
+ET,3,TARGE169
+
+
+R,1,200		 				
+R,2,,,-1          
+/com, Geometry
+
+K,1,150,0
+K,2,150,150
+K,3,450,0
+K,4,450,150
+A,1,2,4,3
+
+/com, ----Mesh
+TYPE,1
+REAL,1
+MAT,1
+
+LESIZE,1,,,n
+LESIZE,2,,,2*n
+LESIZE,3,,,n
+LESIZE,4,,,2*n
+AMESH,1
+
+! line
+K,5,0,0      
+K,6,1000,0
+L,5,6
+TYPE,3 ! ( TARGE169)
+REAL,2
+MAT,1
+TSHAP,LINE
+LMESH,5
+
+! Contact
+TYPE,2
+REAL,2
+MAT,1
+LSEL,S,LINE,,4   
+NSLL,S,1         
+ESURF       
+ALLSEL
+
+
+
+

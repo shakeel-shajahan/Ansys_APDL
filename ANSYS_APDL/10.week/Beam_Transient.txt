@@ -1,0 +1,72 @@
+/com, ------- 
+/com, ------- 2D_analysis_Beam_element
+
+FINISH
+/CLEAR
+
+/com, ------- Preprocessing
+/PREP7
+
+
+/com, ------- Material
+MP,ex,1,206800*1000000
+!mp,prxy,1,0.33
+MP,DENS,1,7830
+
+/com Mesh Density
+n = 10
+
+/com, ------- Elementtyp 
+ET,1,BEAM188,0,0,2
+
+/com, ------- Crosssection data
+Sectype,1,Beam,Rect,,0
+SECDATA,.01,.01
+K,1,0,0
+K,2,1,0
+L,1,2
+LESIZE,1,,,n
+LMESH,1
+
+
+/SOLU
+ANTYPE,4
+
+/com Boundaries
+D,1,ALL,0
+
+M,ALL,UY,OFF
+
+D,ALL,UX,0
+D,ALL,UZ,0
+D,ALL,ROTX,0
+D,ALL,ROTY,0
+
+
+DELTIM,0.001,,,OFF
+
+/com,-----LOADSTEP 1
+TIME,0.001
+
+F,2,fy,-100
+
+Outres,all,all
+KBC,1
+LSWRITE,1
+
+/com,-----LOADSTEP 2
+
+TIME,1
+KBC,1
+FDELE,2,fy
+LSWRITE,2
+LSSOLVE,1,2,1
+Outres,all,all
+
+
+/POST26
+
+NSOL,2,2,u,y
+STORE,MERGE
+PLVAR,2
+PRVAR ! Print list

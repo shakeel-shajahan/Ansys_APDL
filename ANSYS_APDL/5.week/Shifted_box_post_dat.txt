@@ -1,0 +1,32 @@
+
+/POST26
+NUMVAR,20
+auxnode=NODE(300,150,0)
+
+!displacement
+NSOL,2,auxnode,U,X
+
+!reaction forces
+CMSEL,S,edge
+*GET,numnodes,NODE,0,COUNT
+*DO,i,3,(numnodes+2),1
+ *GET,y_max,NODE,0,MXLOC,Y
+ nn=NODE(300,y_max,0)
+ RFORCE,i,nn,FX
+ NSEL,U,NODE,,nn
+*ENDDO
+
+!addition of reaction forces
+ALLSEL
+a=i+1
+ADD,a,3,4
+*DO,j,5,(numnodes+2)
+ ADD,a,a,j
+*ENDDO
+
+!!PROD,2,2,,,,,,1
+!!PROD,a,a,,,,,,1
+/AXLAB,x,ux
+/AXLAB,y,FX
+XVAR,2
+PLVAR,a

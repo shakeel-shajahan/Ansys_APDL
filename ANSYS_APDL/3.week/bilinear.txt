@@ -1,0 +1,123 @@
+/com, ------- Nonlinear Cantilever 
+/com, ------- 2D analysis with end load and moment BILINEAR
+
+FINISH
+/CLEAR
+
+/com, ------- Preprocessing
+/PREP7
+
+/com, ------- Material
+MP,ex,1,3000
+MP,nuxy,1,0.2
+
+TB,BISO
+TBDATA,1,60,500
+
+
+/com, ------- Elementtyps 
+ET,1,plane183,0
+ET,2,solid185,,3
+
+/com, Quarter circular ring area
+CYL4,0,0,80,0,40,90,0
+
+
+/com, ------- Mesh
+LESIZE,1,,,4
+LESIZE,2,,,2
+LESIZE,3,,,4
+LESIZE,4,,,2
+AMESH,1
+
+/com EXTRUDE
+ESIZE,,20
+TYPE,2
+VEXT,1,,,,,1000
+
+
+
+
+/com delete first area
+ASEL,S,,,1
+ACLEAR,all
+ALLSEL
+
+/com Volume Symmetry
+!VSYMM,Y,ALL
+
+/com, ----- Solution
+/SOLU
+
+/com, ------- Boundary Conditions
+NSEL,S,loc,x,0
+D,all,ux,0
+ALLSEL
+NSEL,S,loc,y,0
+D,all,uy,0
+ALLSEL
+NSEL,S,loc,z,0
+D,all,uz,0
+ALLSEL
+
+
+TIME,1
+/com Boundary contidions
+NSEL,S,loc,z,1000
+D,all,uz,50
+allsel
+
+/com , Considering nonlinear
+/com , effects
+NLGEOM ,on
+/com , Limits of substep control
+NSUBST ,50 ,100 ,30
+/com , Load step identification
+/com , Automatic substep control
+AUTOTS ,on
+/com , Solving the load step
+OUTRES,ALL,ALL
+SOLVE
+
+
+TIME,2
+/com Boundary contidions
+NSEL,S,loc,z,1000
+Ddele,all
+allsel
+/com , Considering nonlinear
+/com , effects
+NLGEOM ,on
+/com , Limits of substep control
+NSUBST ,50 ,100 ,30
+/com , Load step identification
+/com , time
+/com , Automatic substep control
+AUTOTS ,on
+
+
+/com , Solving the load step
+OUTRES,ALL,ALL
+SOLVE
+
+
+
+/com, ----- Postprocessing
+/POST1
+PLNSOL,u,z
+NSEL,S,loc,z,1000
+ALLSELL
+PRNSOL,u,y,2
+
+/POST26
+NUMVAR,3
+NSOL,2,68,u,z
+ESOL,3,68,68,s,z
+/AXLAB,x,sz
+/AXLAB,y,uz
+XVAR,2
+PLVAR,3
+
+
+
+

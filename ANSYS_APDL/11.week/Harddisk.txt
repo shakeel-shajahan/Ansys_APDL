@@ -1,0 +1,87 @@
+/com, ------- 
+/com, ------- Harddisk
+
+FINISH
+/CLEAR
+
+/com, ------- Preprocessing
+/PREP7
+
+
+/com, ------- Material
+MP,ex,1,206e9
+mp,nuxy,1,0.3
+MP,DENS,1,7800
+
+/com Mesh Density
+n = 0.00015
+
+/com, ------- Elementtyp 
+ET,1,SHELL181,0,0,2
+SECTYPE,,shell
+SECDATA, 0.5e-4
+
+
+K,1, 0 ,-0.6e-3,0
+K,2, 8.3e-3,-2.15e-3,0
+K,3, 8.3e-3,-1.40e-3,0
+K,4,13.5e-3,-1.40e-3,0
+K,5,13.5e-3, 1.40e-3,0
+K,6, 8.3e-3, 1.40e-3,0
+K,7, 8.3e-3, 2.15e-3,0
+K,8, 0 , 0.60e-3,0
+K,9, 8.3e-3,-0.80e-3,0
+K,10,10.5e-3,-0.80e-3,0
+K,11,10.5e-3, 0.80e-3,0
+K,12, 8.3e-3, 0.80e-3,0
+K,13, 0 ,-0.60e-3, 0.3e-3
+K,14, 8.3e-3,-2.15e-3, 0.3e-3
+K,15, 8.3e-3, 2.15e-3, 0.3e-3
+K,16, 0 , 0.60e-3, 0.3e-3
+K,17, 12e-3,0,0
+
+A,1,2,3,4,5,6,7,8
+A,1,2,14,13
+A,8,7,15,16
+A,9,10,11,12
+
+CYL4,0.012,0,0.0006
+ASBA,1,4
+ASBA,6,5
+AGLUE,1,2,3
+
+AESIZE,ALL,n
+AMESH,ALL
+
+/SOLU
+
+ANTYPE,2
+
+/com Boundaries
+DL,19,,ALL,0
+
+DL,20,,ALL,0
+
+DL,21,,ALL,0
+
+DL,22,,ALL,0
+
+MODOPT,SUBSP,10,0,200000
+
+MXPAND,10
+
+EQSLV,PCG
+
+SOLVE
+
+/POST1
+
+SET,List
+SET,First
+SET,Next
+SET,Next
+SET,Next
+SET,Next
+PLDISP
+
+

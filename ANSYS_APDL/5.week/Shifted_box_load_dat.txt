@@ -1,0 +1,36 @@
+
+!creating component
+LSEL,S,LINE,,3
+NSLL,S,1
+CM,edge,NODE
+ALLSEL
+
+!start solver
+/SOLU
+NLGEOM,ON
+OUTRES,ALL,ALL
+
+! apply boundary conditions to all nodes of ground base
+DL,5,,ALL,0
+DTRAN
+
+!applying gravitational force
+ACEL,,-9.81e3
+
+TIME,1
+NSUBST,10,10,10
+AUTOST,ON
+SOLVE
+
+!shifting the box
+TIME,2
+CMSEL,S,edge
+D,ALL,UX,600
+ALLSEL
+NSUBST,20,100,5
+
+AUTOST,ON
+ALLSEL
+
+SOLVE
+

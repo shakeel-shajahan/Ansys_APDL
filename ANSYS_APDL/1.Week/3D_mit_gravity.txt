@@ -1,0 +1,74 @@
+/com, ------- Konischer Balken
+/com, ------- Volumenmodell mit Einzellast unter Gewichtskraft
+/com, ------- fem_01_s3_eg.dat
+
+/com, ------- Preprocessing
+/PREP7
+
+/com, ------- Material
+MP,ex,1,210000
+MP,nuxy,1,0.3
+MP,dens,1,7.9e-9
+
+/com, ------- Elementtyp 
+ET,1,solid185,,3
+
+/com, ------- Geometry
+K,1,0,0
+K,2,1000,80
+K,3,1000,120
+K,4,0,200
+K,5,0,0,-100
+K,6,1000,80,-100
+K,7,1000,120,-100
+K,8,0,200,-100
+A,1,2,3,4
+A,5,6,7,8
+A,2,3,7,6
+A,1,4,8,5
+A,1,2,6,5
+A,3,4,8,7
+VA,1,2,3,4,5,6
+
+/com, ------- Mesh
+LESIZE,1,,,4
+LESIZE,2,,,2
+LESIZE,3,,,4
+LESIZE,4,,,2
+LESIZE,5,,,4
+LESIZE,6,,,2
+LESIZE,7,,,4
+LESIZE,8,,,2
+LESIZE,10,,,2
+VMESH,1
+
+/com, ------- Solution
+/SOLU
+
+/com, ------- Boundary Conditions
+NSEL,S,loc,x,0
+D,all,ux,0
+NSEL,R,loc,y,100
+D,all,uy,0
+ALLSEL
+
+/com, -------- Loads
+
+ACEL,,9.81e3
+
+NSEL,S,loc,x,0
+NSEL,R,loc,z,-50
+D,all,uz,0
+ALLSEL
+nn=node(1000,120,-50)
+F,nn,FY,-49050
+
+SOLVE
+
+/com, ------- Postprocessing
+/POST1
+PLNSOL,u,y,2
+NSEL,S,loc,z,-50
+NSEL,R,loc,y,100
+PRNSOL,u,y,2
+

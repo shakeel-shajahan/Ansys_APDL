@@ -1,0 +1,19 @@
+/NOPR
+/RESET
+/DEVICE,VECT,OFF 
+! General Graphics Settings
+/GTHK,CURV,  2
+/GROPT,CGRI,ON
+/GROPT,CURL,  1
+/TRLCY,ON
+/TXTRE,ON
+/COL, PBAK,0, 1,  4
+! Window Settings
+/VIEW,1,  0.0000    ,  0.0000    ,  1.0000    
+/FOC, 1,AUTO
+/DIST,1,AUTO
+/TYPE,1, 6
+/EDG, 1, 0,  45.000    
+/CONT,1,  9,AUTO
+/GO  
+/RMTEMP
