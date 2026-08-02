@@ -1,0 +1,5 @@
+Dataset: NASA C-MAPSS FD002 (real, 260 engines, 6 real operating conditions)
+Health targets: sensor-derived flow-loss / efficiency-loss indices
+(N-CMAPSS ground-truth health parameters unreachable from this sandbox)
+Health-parameter RMSE: 0.07653
+Sensor-reconstruction RMSE: 0.13527

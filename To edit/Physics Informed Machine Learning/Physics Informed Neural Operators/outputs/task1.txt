@@ -1,0 +1,6 @@
+Dataset: NASA C-MAPSS FD001 (real, 100 engines)
+Channels used (15): op1, s2, s3, s4, s7, s8, s9, s11, s12, s13, s14, s15, s17, s20, s21
+Train/test split: 80/20 engine units (leakage-free)
+Health RMSE: 0.1601
+RUL RMSE: 14.660 cycles
+Monotonicity violations: 0.00%
