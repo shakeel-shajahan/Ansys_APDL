@@ -1,5 +1,0 @@
-Dataset: CWRU Bearing Data Center (real component faults) + synthetic
-sensor-fault injection (bias/drift/dropout) on real DE/FE channels
-Component-fault accuracy: 1.000
-Sensor-fault accuracy: 0.718
-Clean-signal RMSE: 0.4234

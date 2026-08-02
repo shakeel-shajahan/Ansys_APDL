@@ -1,7 +1,0 @@
-Model: single-mode blade forced response (Euler-Bernoulli cantilever)
-Real parameters used: NASA Rotor 37 geometry/speed (Reid & Moore 1978;
-Suder 1996) and real Ti-6Al-4V material properties.
-Derived blade span=75.7 mm, chord=63.6 mm, 1st bending mode f1=454.4 Hz, shaft=286.5 Hz, blade-passing frequency=10313 Hz
-Displacement RMSE: 3.853382e-05 m
-Acceleration RMSE: 248.9093 m/s^2
-Structural residual RMS (normalised): 0.0000
