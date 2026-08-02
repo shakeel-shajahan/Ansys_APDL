@@ -1,5 +1,0 @@
-Model: Moore-Greitzer lumped-parameter compressor stability ODE
-Real design point used: mdot=20.19 kg/s, PR=2.106, N=17188.7 rpm, 36 blades (NASA Rotor 37, published)
-Field RMSE: 0.04876
-MG ODE residual RMS: 0.33246
-Stall-amplitude RMSE: 0.07433
