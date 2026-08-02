@@ -1,0 +1,6 @@
+Dataset: CWRU Bearing Data Center, 1797 RPM, DE+FE channels (real)
+Real bearing frequencies: shaft=29.95 Hz, BPFO=107.36 Hz, BPFI=162.19 Hz, BSF=70.58 Hz
+Threshold: 1.1354
+Accuracy: 0.990
+Healthy false-alarm rate: 4.2%
+Fault recall: 100.0%

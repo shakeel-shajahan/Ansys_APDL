@@ -1,0 +1,18 @@
+Dataset: NASA C-MAPSS FD001 (real, 100 engines, 15 real sensor/setting channels)
+All-sensor health RMSE: 0.210800
+Ranking: T30, T24, Nc, phi, Nf, NRc, NRf, alt_setting, htBleed, Ps30, W31, P30, T50, BPR, W32
+alt_setting: gate=0.843, attribution=0.00292
+T24: gate=0.829, attribution=0.00382
+T30: gate=0.825, attribution=0.00421
+T50: gate=0.824, attribution=0.00252
+P30: gate=0.827, attribution=0.00276
+Nf: gate=0.827, attribution=0.00326
+Nc: gate=0.824, attribution=0.00339
+Ps30: gate=0.830, attribution=0.00288
+phi: gate=0.838, attribution=0.00330
+NRf: gate=0.815, attribution=0.00316
+NRc: gate=0.821, attribution=0.00313
+BPR: gate=0.828, attribution=0.00236
+htBleed: gate=0.834, attribution=0.00290
+W31: gate=0.834, attribution=0.00274
+W32: gate=0.826, attribution=0.00236
